@@ -11,5 +11,5 @@ python smarts_filter.py -i /path/to/input/data.sdf -o /path/to/output/dir/output
 Specifically (if in the smarts-filter base dir)
 
 ```bash
-python smarts_filter.py -i data/input/data.sdf -o data/output/outputfile.sdf
+python src/smarts_filter.py -i data/input/data.sdf -o data/output/outputfile.sdf
 ```
