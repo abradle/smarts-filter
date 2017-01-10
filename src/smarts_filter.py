@@ -1,4 +1,4 @@
-import utils
+import utils, os
 import sys, gzip, argparse
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -29,6 +29,8 @@ def main():
     args = parser.parse_args()
     utils.log("Screen Args: ", args)
 
+    if not args.output:
+        raise ValueError("Must specify output location")
 
     input, output, suppl, writer, output_base = utils.default_open_input_output(args.input, args.informat, args.output,
                                                                                 'screen', args.outformat)
@@ -51,6 +53,9 @@ def main():
     i = 0
     count = 0
 
+    dir_base = os.path.dirname(args.output)
+
+    writer_dict = filter_to_use.get_writers(dir_base)
 
     for mol in suppl:
         i += 1
@@ -64,8 +69,12 @@ def main():
             for name in mol.GetPropNames():
                 mol.ClearProp(name)
             writer.write(mol)
+            for reaction in filter_pass:
+                writer_dict[reaction].write(mol)
+                writer_dict[reaction].flush()
 
-    utils.log("Found", count, "similar molecules")
+    utils.log("Found", count, " appropriate molecules from "+str(i))
+    utils.log("Mols found in: "+ dir_base)
 
     writer.flush()
     writer.close()

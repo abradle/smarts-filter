@@ -1,6 +1,6 @@
 from rdkit import Chem
 
-
+import os
 
 class Filter(object):
 
@@ -55,3 +55,14 @@ class Filter(object):
                 if mol.HasSubstructMatch(patt):
                     out_list.append(key)
         return out_list
+
+    def get_writers(self, dir_base):
+        """
+        Get all the writers of the SD files
+        :param output_path:
+        :return:
+        """
+        out_d = {}
+        for x in self.starts:
+            out_d[x] = Chem.SDWriter(os.path.join(dir_base, x))
+        return out_d
